@@ -1,0 +1,11 @@
+{
+  "name": "Lenovo Duet 2 Debugger",
+  "description": "A web-based remote terminal and AI diagnostic tool for postmarketOS using WebUSB/Web Serial.",
+  "requestFramePermissions": [
+    "serial",
+    "usb"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
