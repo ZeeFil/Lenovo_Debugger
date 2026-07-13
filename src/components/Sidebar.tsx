@@ -1,7 +1,6 @@
 import React from 'react';
-import { Key, ShieldAlert, LogOut } from 'lucide-react';
-import { auth } from '../firebase';
-import { signOut, User } from 'firebase/auth';
+import { Key } from 'lucide-react';
+import { User } from 'firebase/auth';
 
 interface SidebarProps {
   user: User | null;
@@ -13,41 +12,10 @@ interface SidebarProps {
   debugMsg?: string;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ user, geminiKey, setGeminiKey, isConnected, isChecking, onCheckConnection, debugMsg }) => {
-
-
-  const logout = () => signOut(auth);
+export const Sidebar: React.FC<SidebarProps> = ({ geminiKey, setGeminiKey }) => {
 
   return (
     <div className="w-full lg:w-80 h-auto lg:h-full flex flex-col shrink-0 bg-white/5 border-l border-white/10 backdrop-blur-xl">
-      
-      {/* Auth Section */}
-      <div className="p-6 border-b border-white/10">
-        <div className="flex items-center gap-3 mb-4">
-          <ShieldAlert className="w-5 h-5 text-purple-400" />
-          <h2 className="font-semibold text-white tracking-wide">Access Control</h2>
-        </div>
-        
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/10">
-            {user?.photoURL && (
-              <img src={user.photoURL} alt="Profile" className="w-8 h-8 rounded-full border border-white/20" />
-            )}
-            <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-medium text-white truncate">{user?.displayName}</p>
-              <p className="text-xs text-neutral-400 truncate">{user?.email}</p>
-            </div>
-          </div>
-          <button
-            onClick={logout}
-            className="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 py-2 rounded-lg transition-all duration-300 border border-red-500/20"
-          >
-            <LogOut className="w-4 h-4" /> Sign Out
-          </button>
-        </div>
-      </div>
-
-
 
       {/* Settings Section */}
       <div className="p-6">

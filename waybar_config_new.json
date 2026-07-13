@@ -65,12 +65,12 @@
     },
     "custom/power": {
         "format": "⏻ Power",
-        "on-click": "swaynag -t warning -m 'Power off the tablet?' -b 'Yes, Power Off' 'systemctl poweroff'",
+        "on-click": "pkill swaynag; swaynag -t power -m '  Power off the tablet?' -Z '  Yes, Power Off' 'systemctl poweroff' -s '  Cancel'",
         "tooltip": false
     },
     "custom/reboot": {
         "format": "🔄 Reboot",
-        "on-click": "swaynag -t warning -m 'Reboot the tablet?' -b 'Yes, Reboot' 'systemctl reboot'",
+        "on-click": "pkill swaynag; swaynag -t reboot -m '  Reboot the tablet?' -Z '  Yes, Reboot' 'systemctl reboot' -s '  Cancel'",
         "tooltip": false
     }
 }

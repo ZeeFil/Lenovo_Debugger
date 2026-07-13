@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth } from './firebase';
-import { onAuthStateChanged, User, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { onAuthStateChanged, User, signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth';
+import { LogOut } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { SwayEditor } from './components/SwayEditor';
 import { pingDevice } from './services/cloudRelay';
@@ -109,12 +110,28 @@ function App() {
           <p className="text-sm text-neutral-400 mt-1">Advanced Cloud Relay Configuration Interface</p>
         </div>
         
-        <ConnectionStatus 
-          isConnected={isConnected} 
-          isChecking={isChecking} 
-          onCheckConnection={checkConnection} 
-          debugMsg={debugMsg} 
-        />
+        <div className="flex items-center gap-4">
+          <ConnectionStatus 
+            isConnected={isConnected} 
+            isChecking={isChecking} 
+            onCheckConnection={checkConnection} 
+            debugMsg={debugMsg} 
+          />
+
+          {/* User avatar + sign out */}
+          <div className="flex items-center gap-2 pl-4 border-l border-white/10">
+            {user?.photoURL && (
+              <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full border border-white/20" />
+            )}
+            <button
+              onClick={() => signOut(auth)}
+              title="Sign Out"
+              className="p-2 rounded-lg text-neutral-400 hover:text-red-400 hover:bg-white/5 transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       </header>
 
       {/* Main App Container */}

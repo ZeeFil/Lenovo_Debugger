@@ -1,0 +1,31 @@
+# Global defaults for all swaynag types
+font=Google Sans 18
+message-padding=16
+
+[power]
+background=1E1E2EFF
+text=CAD3F5FF
+button-background=45475AFF
+button-text=CAD3F5FF
+border=45475AFF
+border-bottom=ED8796FF
+border-bottom-size=4
+button-border-size=1
+button-padding=12
+button-gap=16
+button-dismiss-gap=16
+button-margin-right=16
+
+[reboot]
+background=1E1E2EFF
+text=CAD3F5FF
+button-background=45475AFF
+button-text=CAD3F5FF
+border=45475AFF
+border-bottom=EED49FFF
+border-bottom-size=4
+button-border-size=1
+button-padding=12
+button-gap=16
+button-dismiss-gap=16
+button-margin-right=16
