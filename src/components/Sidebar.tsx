@@ -1,3 +1,4 @@
+import React from 'react';
 import { Key, ShieldAlert, LogOut } from 'lucide-react';
 import { auth } from '../firebase';
 import { signOut, User } from 'firebase/auth';
@@ -13,14 +14,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ user, geminiKey, setGeminiKey, isConnected, isChecking, onCheckConnection, debugMsg }) => {
-  const login = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error) {
-      console.error('Login failed', error);
-    }
-  };
+
 
   const logout = () => signOut(auth);
 
