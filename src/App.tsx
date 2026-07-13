@@ -100,26 +100,29 @@ function App() {
         <div className="absolute -bottom-[20%] left-[20%] w-[60%] h-[40%] rounded-full bg-emerald-600/5 blur-[120px] mix-blend-screen"></div>
       </div>
 
+      {/* Top Navbar */}
+      <header className="relative z-20 w-full px-6 py-4 flex items-center justify-between bg-black/40 border-b border-white/10 backdrop-blur-xl">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
+            Lenovo Debugger
+          </h1>
+          <p className="text-sm text-neutral-400 mt-1">Advanced Cloud Relay Configuration Interface</p>
+        </div>
+        
+        <ConnectionStatus 
+          isConnected={isConnected} 
+          isChecking={isChecking} 
+          onCheckConnection={checkConnection} 
+          debugMsg={debugMsg} 
+        />
+      </header>
+
       {/* Main App Container */}
       <main className="flex-1 flex flex-col lg:flex-row relative z-10 w-full max-w-[1600px] mx-auto">
         
         {/* Editor Area (Flex grows) */}
         <div className="flex-1 p-4 lg:p-8 flex flex-col min-h-[60vh] lg:min-h-0">
-          <div className="mb-6 flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
-                Lenovo Debugger
-              </h1>
-              <p className="text-sm text-neutral-400 mt-1">Advanced Cloud Relay Configuration Interface</p>
-            </div>
-            
-            <ConnectionStatus 
-              isConnected={isConnected} 
-              isChecking={isChecking} 
-              onCheckConnection={checkConnection} 
-              debugMsg={debugMsg} 
-            />
-          </div>
+
           
           <div className="flex-1 relative">
             <SwayEditor user={user} geminiKey={geminiKey} isConnected={isConnected} />

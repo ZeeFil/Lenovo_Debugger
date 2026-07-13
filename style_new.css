@@ -20,7 +20,9 @@ window#waybar {
 #battery,
 #network,
 #custom-foot,
-#custom-close {
+#custom-close,
+#custom-power,
+#custom-reboot {
     padding: 0 16px;
     margin: 4px 6px;
     border-radius: 16px; /* Pill shape */
@@ -34,7 +36,9 @@ window#waybar {
 #battery:hover,
 #network:hover,
 #custom-foot:hover,
-#custom-close:hover {
+#custom-close:hover,
+#custom-power:hover,
+#custom-reboot:hover {
     background-color: #ffffff; /* Simple hover effect */
     color: #000000;
 }
@@ -80,4 +84,12 @@ window#waybar {
 
 #custom-close {
     background-color: #ed8796; /* Red */
+}
+
+#custom-power {
+    background-color: #ed8796; /* Red */
+}
+
+#custom-reboot {
+    background-color: #eed49f; /* Yellow */
 }
