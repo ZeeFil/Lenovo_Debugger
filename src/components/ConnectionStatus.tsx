@@ -10,7 +10,7 @@ interface ConnectionStatusProps {
 
 export const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ isConnected, isChecking, onCheckConnection, debugMsg }) => {
   return (
-    <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-3 backdrop-blur-md">
+    <div className="flex items-center gap-4 bg-white/5 border border-purple-500/30 rounded-xl p-3 backdrop-blur-md">
       <div className="flex items-center gap-2">
         {isConnected ? (
           <Wifi className="w-5 h-5 text-emerald-400" />

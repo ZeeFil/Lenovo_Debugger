@@ -67,7 +67,7 @@ export const SwayEditor: React.FC<SwayEditorProps> = ({ user, geminiKey, isConne
   };
 
   return (
-    <div className="flex flex-col h-full bg-black/40 backdrop-blur-3xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative">
+    <div className="flex flex-col h-full bg-black/40 backdrop-blur-3xl border border-purple-500/30 rounded-2xl overflow-hidden shadow-2xl relative">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-white/10 bg-white/5">
         <div className="flex items-center gap-3">

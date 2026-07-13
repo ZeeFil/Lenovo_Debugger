@@ -102,7 +102,7 @@ function App() {
       </div>
 
       {/* Top Navbar */}
-      <header className="relative z-20 w-full px-6 py-4 flex items-center justify-between bg-black/40 border-b border-white/10 backdrop-blur-xl">
+      <header className="relative z-20 w-full px-6 py-4 flex items-center justify-between bg-black/40 border border-purple-500/30 backdrop-blur-xl">
         <div>
           <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
             Lenovo Debugger
@@ -119,7 +119,7 @@ function App() {
           />
 
           {/* User avatar + sign out */}
-          <div className="flex items-center gap-2 pl-4 border-l border-white/10">
+          <div className="flex items-center gap-2 pl-4 border-l border-purple-500/30">
             {user?.photoURL && (
               <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full border border-white/20" />
             )}

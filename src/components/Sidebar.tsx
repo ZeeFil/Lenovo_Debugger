@@ -15,7 +15,7 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ geminiKey, setGeminiKey }) => {
 
   return (
-    <div className="w-full lg:w-80 h-auto lg:h-full flex flex-col shrink-0 bg-white/5 border-l border-white/10 backdrop-blur-xl">
+    <div className="w-full lg:w-80 h-auto lg:h-full flex flex-col shrink-0 bg-white/5 border-l border-purple-500/30 backdrop-blur-xl">
 
       {/* Settings Section */}
       <div className="p-6">
