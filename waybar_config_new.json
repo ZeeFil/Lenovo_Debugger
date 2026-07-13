@@ -1,0 +1,76 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 40,
+    "margin-top": 8,
+    "margin-left": 16,
+    "margin-right": 16,
+    "margin-bottom": 0,
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode"
+    ],
+    "modules-center": [
+        "custom/foot",
+        "custom/close"
+    ],
+    "modules-right": [
+        "memory",
+        "network",
+        "battery",
+        "clock",
+        "custom/reboot",
+        "custom/power"
+    ],
+    "custom/foot": {
+        "format": " Terminal",
+        "on-click": "foot",
+        "tooltip": false
+    },
+    "custom/close": {
+        "format": " Close",
+        "on-click": "swaymsg kill",
+        "tooltip": false
+    },
+    "memory": {
+        "interval": 5,
+        "format": " {used:0.1f}G / {total:0.1f}G",
+        "on-click": "python3 /home/user/ram_dropdown.py",
+        "tooltip": false
+    },
+    "network": {
+        "format-wifi": " {signalStrength}%",
+        "format-ethernet": " {ipaddr}/{cidr}",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "format-linked": " No IP",
+        "format-disconnected": " No Internet",
+        "format-alt": " {ipaddr}/{cidr}"
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{icon} {time}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "clock": {
+        "format": " {:%I:%M %p}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": " {:%Y-%m-%d}"
+    },
+    "custom/power": {
+        "format": "⏻ Power",
+        "on-click": "systemctl poweroff",
+        "tooltip": false
+    },
+    "custom/reboot": {
+        "format": "🔄 Reboot",
+        "on-click": "systemctl reboot",
+        "tooltip": false
+    }
+}

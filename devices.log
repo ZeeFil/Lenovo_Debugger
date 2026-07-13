@@ -1,0 +1,124 @@
+[*] Sent command: cat /proc/bus/input/devices
+[*] Waiting for response......
+========================================
+I: Bus=0019 Vendor=0000 Product=0000 Version=0000
+N: Name="Whiskers Tablet Mode Switch"
+P: Phys=
+S: Sysfs=/devices/platform/soc/11012000.spi/spi_master/spi2/spi2.0/11012000.spi:cros-ec@0:cbas/input/input0
+U: Uniq=
+H: Handlers=event0 
+B: PROP=0
+B: EV=21
+B: SW=2
+
+I: Bus=0006 Vendor=0000 Product=0000 Version=0001
+N: Name="cros_ec_buttons"
+P: Phys=spi2.0/input1
+S: Sysfs=/devices/platform/soc/11012000.spi/spi_master/spi2/spi2.0/11012000.spi:cros-ec@0:keyboard-controller/input/input1
+U: Uniq=
+H: Handlers=kbd event1 
+B: PROP=0
+B: EV=100023
+B: KEY=1c000000000000 0
+B: SW=1
+
+I: Bus=0019 Vendor=0001 Product=0001 Version=0100
+N: Name="wifi-wakeup"
+P: Phys=gpio-keys/input0
+S: Sysfs=/devices/platform/wifi-wakeup/input/input2
+U: Uniq=
+H: Handlers=kbd event2 
+B: PROP=0
+B: EV=3
+B: KEY=8000 0 0
+
+I: Bus=0003 Vendor=18d1 Product=503c Version=0100
+N: Name="Google Inc. Hammer"
+P: Phys=usb-11200000.usb-1.1/input0
+S: Sysfs=/devices/platform/soc/11201000.usb/11200000.usb/usb1/1-1/1-1.1/1-1.1:1.0/0003:18D1:503C.0002/input/input6
+U: Uniq=240049000e57425239343520
+H: Handlers=kbd event3 
+B: PROP=0
+B: EV=100013
+B: KEY=1000000000007 ff800000000007ff febeffdfffefffff fffffffffffffffe
+B: MSC=10
+
+I: Bus=0018 Vendor=27c6 Product=0e30 Version=0100
+N: Name="hid-over-i2c 27C6:0E30"
+P: Phys=0-005d
+S: Sysfs=/devices/platform/soc/11007000.i2c/i2c-0/0-005d/0018:27C6:0E30.0001/input/input7
+U: Uniq=
+H: Handlers=event4 
+B: PROP=2
+B: EV=b
+B: KEY=400 0 0 0 0 0
+B: ABS=673800001000003
+
+I: Bus=0018 Vendor=27c6 Product=0e30 Version=0100
+N: Name="hid-over-i2c 27C6:0E30 Stylus"
+P: Phys=0-005d
+S: Sysfs=/devices/platform/soc/11007000.i2c/i2c-0/0-005d/0018:27C6:0E30.0001/input/input8
+U: Uniq=
+H: Handlers=event5 
+B: PROP=2
+B: EV=1b
+B: KEY=1c03 0 0 0 0 0
+B: ABS=1000d000003
+B: MSC=11
+
+I: Bus=0018 Vendor=27c6 Product=0e30 Version=0100
+N: Name="hid-over-i2c 27C6:0E30 Stylus"
+P: Phys=0-005d
+S: Sysfs=/devices/platform/soc/11007000.i2c/i2c-0/0-005d/0018:27C6:0E30.0001/input/input9
+U: Uniq=
+H: Handlers=event6 
+B: PROP=0
+B: EV=1
+
+I: Bus=0018 Vendor=27c6 Product=0e30 Version=0100
+N: Name="hid-over-i2c 27C6:0E30 UNKNOWN"
+P: Phys=0-005d
+S: Sysfs=/devices/platform/soc/11007000.i2c/i2c-0/0-005d/0018:27C6:0E30.0001/input/input10
+U: Uniq=
+H: Handlers=event7 
+B: PROP=0
+B: EV=9
+B: ABS=10000000000
+
+I: Bus=0003 Vendor=18d1 Product=503c Version=0100
+N: Name="Google Inc. Hammer"
+P: Phys=usb-11200000.usb-1.1/input2
+S: Sysfs=/devices/platform/soc/11201000.usb/11200000.usb/usb1/1-1/1-1.1/1-1.1:1.2/0003:18D1:503C.0003/input/input11
+U: Uniq=240049000e57425239343520
+H: Handlers=event8 
+B: PROP=5
+B: EV=1b
+B: KEY=e520 10000 0 0 0 0
+B: ABS=ef3800001000003
+B: MSC=20
+
+I: Bus=0003 Vendor=0fac Product=0ade Version=0000
+N: Name="keyd virtual keyboard"
+P: Phys=
+S: Sysfs=/devices/virtual/input/input12
+U: Uniq=
+H: Handlers=kbd leds event9 rfkill 
+B: PROP=0
+B: EV=120003
+B: KEY=10000000000000 0 ffffffffffffff0f ffffffffffffffff ffffffffffffffff fffffffffffffffe
+B: LED=1ff
+
+I: Bus=0003 Vendor=0fac Product=1ade Version=0000
+N: Name="keyd virtual pointer"
+P: Phys=
+S: Sysfs=/devices/virtual/input/input13
+U: Uniq=
+H: Handlers=event10 
+B: PROP=0
+B: EV=f
+B: KEY=ff0000 0 0 0 0
+B: REL=147
+B: ABS=3
+
+
+========================================

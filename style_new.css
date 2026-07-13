@@ -1,0 +1,83 @@
+* {
+    /* `otf-font-awesome` is required to be installed for icons */
+    font-family: "Inter", "Ubuntu", "Fira Code", system-ui, sans-serif, FontAwesome;
+    font-size: 14px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(30, 30, 46, 0.85); /* Deep sleek dark */
+    border-radius: 20px;
+    color: #cad3f5;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+#memory,
+#clock,
+#battery,
+#network,
+#custom-foot,
+#custom-close {
+    padding: 0 16px;
+    margin: 4px 6px;
+    border-radius: 16px; /* Pill shape */
+    color: #24273a;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+#memory:hover,
+#clock:hover,
+#battery:hover,
+#network:hover,
+#custom-foot:hover,
+#custom-close:hover {
+    background-color: #ffffff; /* Simple hover effect */
+    color: #000000;
+}
+
+#memory {
+    background-color: #f5a97f; /* Peach */
+}
+
+#network {
+    background-color: #8aadf4; /* Blue */
+}
+#network.disconnected {
+    background-color: #ed8796; /* Red */
+}
+
+#battery {
+    background-color: #a6da95; /* Green */
+}
+#battery.charging, #battery.plugged {
+    background-color: #eed49f; /* Yellow */
+}
+@keyframes blink {
+    to {
+        background-color: #ed8796; /* Red */
+    }
+}
+#battery.critical:not(.charging) {
+    background-color: #ed8796;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+#clock {
+    background-color: #c6a0f6; /* Mauve */
+}
+
+#custom-foot {
+    background-color: #8bd5ca; /* Teal */
+}
+
+#custom-close {
+    background-color: #ed8796; /* Red */
+}

@@ -21,10 +21,12 @@ service cloud.firestore {
     }
 
     match /diagnostics/{docId} {
-      // Allow users to create their own diagnostic records
       allow create: if isSignedIn() && isValidDiagnostic(incoming()) && incoming().timestamp == request.time;
-      // Allow users to read their own diagnostic records
       allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    match /device_sync/{docId} {
+      allow read, write: if true;
     }
   }
 }

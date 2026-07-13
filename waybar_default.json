@@ -1,0 +1,8 @@
+[*] Sent command: cat /etc/xdg/waybar/config
+[*] Waiting for response....
+========================================
+
+[STDERR]
+cat: can't open '/etc/xdg/waybar/config': No such file or directory
+
+========================================
