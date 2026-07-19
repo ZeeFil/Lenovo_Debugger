@@ -38,6 +38,8 @@ export const SmartHomeControl: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  const [isStartingStream, setIsStartingStream] = useState(false);
 
   // New device form state
   const [newDeviceName, setNewDeviceName] = useState('');
@@ -221,20 +223,34 @@ export const SmartHomeControl: React.FC = () => {
   };
 
   const handleToggleStream = async () => {
-    if (isCameraActive) {
+    if (isCameraActive || streamUrl) {
       setIsCameraActive(false);
+      setStreamUrl(null);
       try {
-        await executeCloudCommand("pkill -f mjpeg_screen_server.py");
+        await executeCloudCommand("pkill -f start_camera_tunnel.py ; pkill -f mjpeg_screen_server.py ; pkill -f cloudflared");
       } catch (e) {
         console.error("Failed to stop stream", e);
       }
     } else {
-      setIsCameraActive(true);
+      setIsStartingStream(true);
       try {
-        // Run the python script in background using nohup or just background
-        await executeCloudCommand("nohup python3 mjpeg_screen_server.py > /dev/null 2>&1 &", 3000);
+        const result = await executeCloudCommand("python3 start_camera_tunnel.py", 15000);
+        if (result && result.output && result.output.includes("trycloudflare.com")) {
+          const urlMatch = result.output.match(/https:\/\/[a-zA-Z0-9-]+\.trycloudflare\.com/);
+          if (urlMatch) {
+            setStreamUrl(urlMatch[0]);
+            setIsCameraActive(true);
+            setCameraError(false);
+          } else {
+            console.error("No URL found in output", result.output);
+          }
+        } else {
+          console.error("Failed to start tunnel", result);
+        }
       } catch (e) {
         console.error("Error starting stream", e);
+      } finally {
+        setIsStartingStream(false);
       }
     }
   };
@@ -303,23 +319,32 @@ export const SmartHomeControl: React.FC = () => {
               </h3>
               <button
                 onClick={handleToggleStream}
+                disabled={isStartingStream}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors border ${
-                  isCameraActive 
-                    ? 'bg-rose-500/20 text-rose-400 border-rose-500/30 hover:bg-rose-500/30' 
-                    : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30'
+                  isStartingStream
+                    ? 'bg-neutral-500/20 text-neutral-400 border-neutral-500/30 cursor-not-allowed'
+                    : isCameraActive || streamUrl
+                      ? 'bg-rose-500/20 text-rose-400 border-rose-500/30 hover:bg-rose-500/30' 
+                      : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/30'
                 }`}
               >
-                {isCameraActive ? 'Stop Stream' : 'Start Stream'}
+                {isStartingStream ? 'Connecting...' : (isCameraActive || streamUrl) ? 'Stop Stream' : 'Start Stream'}
               </button>
             </div>
             
             <div className="relative w-full h-96 bg-neutral-900 rounded-2xl overflow-hidden flex items-center justify-center border border-white/5">
-              {isCameraActive ? (
+              {isStartingStream ? (
+                <div className="flex flex-col items-center justify-center gap-3 text-neutral-400">
+                  <RefreshCw className="w-10 h-10 mb-2 animate-spin text-emerald-500" />
+                  <p className="text-base font-medium">Establishing Secure Tunnel...</p>
+                  <p className="text-sm opacity-70">Traversing NAT and bypassing Mixed Content policies.</p>
+                </div>
+              ) : isCameraActive && streamUrl ? (
                 <>
                   {!cameraError && tabletConnected ? (
                     <img 
                       key={cameraRetryKey}
-                      src={`http://${tabletIp}:8080/?action=stream`}
+                      src={streamUrl}
                       onError={() => setCameraError(true)}
                       alt="Tablet Webcam Stream" 
                       className="w-full h-full object-cover"
