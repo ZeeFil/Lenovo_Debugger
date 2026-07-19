@@ -1,6 +1,6 @@
 import os
 
-app_path = '/home/zfil/Lenovo_Debugger/src/App.tsx'
+app_path = '/home/zfil/Lenovo_Smarthome_Hub/src/App.tsx'
 
 with open(app_path, 'r') as f:
     content = f.read()

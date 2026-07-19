@@ -1,6 +1,6 @@
 #!/bin/sh
-echo "Starting 20 tests..."
-for i in $(seq 1 20); do
+echo "Starting 25 tests..."
+for i in $(seq 1 25); do
     pkill -f widget.py
     sh /home/user/run_widget.sh &
     sleep 1

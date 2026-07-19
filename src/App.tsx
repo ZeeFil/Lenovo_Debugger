@@ -4,8 +4,10 @@ import { onAuthStateChanged, User, signInWithPopup, GoogleAuthProvider, signOut 
 import { LogOut } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { SwayEditor } from './components/SwayEditor';
+import { SmartHomeControl } from './components/SmartHomeControl';
 import { pingDevice } from './services/cloudRelay';
 import { ConnectionStatus } from './components/ConnectionStatus';
+import { Home, Settings } from 'lucide-react';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -14,6 +16,7 @@ function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
   const [debugMsg, setDebugMsg] = useState("");
+  const [activeAppTab, setActiveAppTab] = useState<'smarthome' | 'configurator'>('smarthome');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -36,8 +39,10 @@ function App() {
   };
 
   useEffect(() => {
-    checkConnection();
-  }, []);
+    if (user) {
+      checkConnection();
+    }
+  }, [user]);
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -68,11 +73,11 @@ function App() {
         <div className="relative z-10 text-center px-4 max-w-lg">
           <div className="mb-8 inline-flex items-center justify-center p-6 bg-white/5 rounded-[2rem] border border-white/10 shadow-2xl backdrop-blur-xl">
              <h1 className="text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
-               Lenovo Debugger
+               Lenovo Smarthome Hub
              </h1>
           </div>
           <p className="text-lg text-neutral-400 mb-10 leading-relaxed">
-            Advanced Cloud Relay Configuration Interface.<br />Please sign in to securely manage your device's Sway configuration via the cloud.
+            Intelligent Remote Control Interface.<br />Please sign in to securely manage your smart home and cloud configurations.
           </p>
           <button
             onClick={handleLogin}
@@ -103,11 +108,27 @@ function App() {
 
       {/* Top Navbar */}
       <header className="relative z-20 w-full px-6 py-4 flex items-center justify-between bg-black/40 border border-purple-500/30 backdrop-blur-xl">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
-            Lenovo Debugger
-          </h1>
-          <p className="text-sm text-neutral-400 mt-1">Advanced Cloud Relay Configuration Interface</p>
+        <div className="flex items-center gap-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
+              Lenovo Smarthome Hub
+            </h1>
+          </div>
+
+          <div className="hidden sm:flex bg-white/5 rounded-lg p-1 border border-white/10">
+            <button
+              onClick={() => setActiveAppTab('smarthome')}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${activeAppTab === 'smarthome' ? 'bg-white/10 text-white' : 'text-neutral-400 hover:text-white'}`}
+            >
+              <Home className="w-4 h-4" /> Home
+            </button>
+            <button
+              onClick={() => setActiveAppTab('configurator')}
+              className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${activeAppTab === 'configurator' ? 'bg-white/10 text-white' : 'text-neutral-400 hover:text-white'}`}
+            >
+              <Settings className="w-4 h-4" /> Configurator
+            </button>
+          </div>
         </div>
         
         <div className="flex items-center gap-4">
@@ -135,20 +156,19 @@ function App() {
       </header>
 
       {/* Main App Container */}
-      <main className="flex-1 flex flex-col lg:flex-row relative z-10 w-full max-w-[1600px] mx-auto">
-        
-        {/* Editor Area (Flex grows) */}
-        <div className="flex-1 p-4 lg:p-8 flex flex-col min-h-[60vh] lg:min-h-0">
-
-          
-          <div className="flex-1 relative">
-            <SwayEditor user={user} geminiKey={geminiKey} isConnected={isConnected} />
+      <main className="flex-1 flex relative z-10 w-full max-w-[1600px] mx-auto overflow-hidden">
+        {activeAppTab === 'smarthome' ? (
+          <SmartHomeControl />
+        ) : (
+          <div className="flex-1 flex flex-col lg:flex-row w-full h-full overflow-hidden">
+            <div className="flex-1 p-4 lg:p-8 flex flex-col min-h-[60vh] lg:min-h-0">
+              <div className="flex-1 relative">
+                <SwayEditor user={user} geminiKey={geminiKey} isConnected={isConnected} />
+              </div>
+            </div>
+            <Sidebar user={user} geminiKey={geminiKey} setGeminiKey={setGeminiKey} isConnected={isConnected} isChecking={isChecking} onCheckConnection={checkConnection} debugMsg={debugMsg} />
           </div>
-        </div>
-
-        {/* Sidebar Panel */}
-        <Sidebar user={user} geminiKey={geminiKey} setGeminiKey={setGeminiKey} isConnected={isConnected} isChecking={isChecking} onCheckConnection={checkConnection} debugMsg={debugMsg} />
-
+        )}
       </main>
     </div>
   );

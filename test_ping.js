@@ -1,5 +1,1 @@
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { db } from './src/firebase.js';
-
-// We have to use the initialized db from firebase.ts
-// But since firebase.ts uses Vite/Browser env variables, running it in Node might fail if it relies on import.meta.env
+const { executeCloudCommand } = require('./src/services/cloudRelay.ts'); // Can't easily run TS directly in node without ts-node or similar.

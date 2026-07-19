@@ -12,6 +12,7 @@
     ],
     "modules-center": [
         "custom/foot",
+        "custom/browser",
         "custom/close"
     ],
     "modules-right": [
@@ -27,6 +28,11 @@
         "on-click": "foot",
         "tooltip": false
     },
+    "custom/browser": {
+        "format": " Firefox",
+        "on-click": "/home/user/browser_launch.sh",
+        "tooltip": false
+    },
     "custom/close": {
         "format": " Close",
         "on-click": "swaymsg kill",
@@ -34,7 +40,7 @@
     },
     "memory": {
         "interval": 5,
-        "format": " {used:0.1f}G / {total:0.1f}G",
+        "format": " {percentage}% ({used:.1f}G)",
         "on-click": "python3 /home/user/ram_dropdown.py",
         "tooltip": false
     },
@@ -65,12 +71,12 @@
     },
     "custom/power": {
         "format": "⏻ Power",
-        "on-click": "pkill swaynag; swaynag -t power -e bottom -f 'Google Sans 20' --background 1E1E2EFF --text CAD3F5FF --button-background 45475AFF --button-text CAD3F5FF --border 1E1E2EFF --border-bottom ED8796FF --border-bottom-size 4 --button-border-size 0 --button-padding 14 --button-gap 20 --button-dismiss-gap 20 --button-margin-right 20 --message-padding 20 -m '  Power off the tablet?' -Z '  Yes, Power Off' 'systemctl poweroff' -s '  Cancel'",
+        "on-click": "pkill swaynag; swaynag -t power -e bottom -f 'Inter 14' --background 1E1E2EFF --text CAD3F5FF --button-background 45475AFF --button-text CAD3F5FF --border 1E1E2EFF --border-bottom-size 0 --button-border-size 0 --button-padding 12 --button-gap 8 --button-dismiss-gap 8 --button-margin-right 0 --message-padding 8 -m '⏻ Power off the tablet?' -Z ' Yes, Power Off' 'loginctl poweroff' -s ' Cancel'",
         "tooltip": false
     },
     "custom/reboot": {
-        "format": "🔄 Reboot",
-        "on-click": "pkill swaynag; swaynag -t reboot -e bottom -f 'Google Sans 20' --background 1E1E2EFF --text CAD3F5FF --button-background 45475AFF --button-text CAD3F5FF --border 1E1E2EFF --border-bottom EED49FFF --border-bottom-size 4 --button-border-size 0 --button-padding 14 --button-gap 20 --button-dismiss-gap 20 --button-margin-right 20 --message-padding 20 -m '  Reboot the tablet?' -Z '  Yes, Reboot' 'systemctl reboot' -s '  Cancel'",
+        "format": " Reboot",
+        "on-click": "pkill swaynag; swaynag -t reboot -e bottom -f 'Inter 14' --background 1E1E2EFF --text CAD3F5FF --button-background 45475AFF --button-text CAD3F5FF --border 1E1E2EFF --border-bottom-size 0 --button-border-size 0 --button-padding 12 --button-gap 8 --button-dismiss-gap 8 --button-margin-right 0 --message-padding 8 -m ' Reboot the tablet?' -Z ' Yes, Reboot' 'loginctl reboot' -s ' Cancel'",
         "tooltip": false
     }
 }

@@ -1,7 +1,7 @@
 import os
 
 # 1. Update Sidebar.tsx
-sidebar_path = '/home/zfil/Lenovo_Debugger/src/components/Sidebar.tsx'
+sidebar_path = '/home/zfil/Lenovo_Smarthome_Hub/src/components/Sidebar.tsx'
 with open(sidebar_path, 'r') as f:
     sidebar_content = f.read()
 
@@ -69,7 +69,7 @@ with open(sidebar_path, 'w') as f:
 
 
 # 2. Update SwayEditor.tsx
-editor_path = '/home/zfil/Lenovo_Debugger/src/components/SwayEditor.tsx'
+editor_path = '/home/zfil/Lenovo_Smarthome_Hub/src/components/SwayEditor.tsx'
 with open(editor_path, 'r') as f:
     editor_content = f.read()
 
@@ -109,7 +109,7 @@ with open(editor_path, 'w') as f:
 
 
 # 3. Update App.tsx
-app_path = '/home/zfil/Lenovo_Debugger/src/App.tsx'
+app_path = '/home/zfil/Lenovo_Smarthome_Hub/src/App.tsx'
 with open(app_path, 'r') as f:
     app_content = f.read()
 

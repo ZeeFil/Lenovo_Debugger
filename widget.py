@@ -8,6 +8,7 @@ import urllib.parse
 import json
 import threading
 import os
+import subprocess
 from datetime import datetime
 
 # Initialize GStreamer
@@ -24,12 +25,17 @@ class WeatherWidget(Gtk.Window):
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.BOTTOM, True)
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.LEFT, True)
         GtkLayerShell.set_anchor(self, GtkLayerShell.Edge.RIGHT, True)
+        GtkLayerShell.set_keyboard_mode(self, GtkLayerShell.KeyboardMode.ON_DEMAND)
         
         # Transparent background for the main window (so wallpaper shows through)
         visual = self.get_screen().get_rgba_visual()
         if visual and self.get_screen().is_composited():
             self.set_visual(visual)
         self.set_app_paintable(True)
+        
+        # Ensure window captures clicks to clear focus
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        self.connect("button-press-event", self.on_window_clicked)
         
         # Center alignment wrapper
         self.center_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
@@ -77,6 +83,23 @@ class WeatherWidget(Gtk.Window):
             
         self.weather_labels[0].set_markup("<span size='14000' color='#aaddff'>Loading Weather Data...</span>")
             
+        # Bins Reminder Box
+        self.bins_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+        self.bins_box.set_name("bins-container")
+        self.left_vbox.pack_start(self.bins_box, False, False, 15)
+
+        self.bins_title = Gtk.Label()
+        self.bins_title.set_halign(Gtk.Align.START)
+        self.bins_title.set_line_wrap(True)
+        self.bins_title.set_max_width_chars(30)
+        self.bins_box.pack_start(self.bins_title, False, False, 0)
+
+        self.bins_status = Gtk.Label()
+        self.bins_status.set_halign(Gtk.Align.START)
+        self.bins_status.set_line_wrap(True)
+        self.bins_status.set_max_width_chars(35)
+        self.bins_box.pack_start(self.bins_status, False, False, 0)
+            
         # Right column (Calendar + Radio)
         self.right_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=20)
         self.right_vbox.set_valign(Gtk.Align.CENTER)
@@ -86,9 +109,16 @@ class WeatherWidget(Gtk.Window):
         self.right_vbox.pack_start(self.calendar, False, False, 0)
         
         # --- RADIO WIDGET ---
+        self.radio_event_box = Gtk.EventBox()
+        self.radio_event_box.set_can_focus(True)
+        self.radio_event_box.connect("button-press-event", self.on_radio_clicked)
+        self.radio_event_box.connect("key-press-event", self.on_radio_key_press)
+        self.radio_event_box.connect("focus-out-event", self.on_radio_focus_out)
+        self.right_vbox.pack_start(self.radio_event_box, False, False, 0)
+        
         self.radio_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
         self.radio_box.set_name("radio-container")
-        self.right_vbox.pack_start(self.radio_box, False, False, 0)
+        self.radio_event_box.add(self.radio_box)
         
         self.station_label = Gtk.Label()
         self.station_label.set_halign(Gtk.Align.CENTER)
@@ -114,6 +144,7 @@ class WeatherWidget(Gtk.Window):
         
         for btn in [self.btn_prev, self.btn_play, self.btn_next]:
             btn.get_style_context().add_class("radio-btn")
+            btn.set_can_focus(False)
             self.radio_controls.pack_start(btn, False, False, 0)
             
         # Volume Control
@@ -128,6 +159,7 @@ class WeatherWidget(Gtk.Window):
         self.volume_slider.set_value(100)
         self.volume_slider.set_size_request(150, -1)
         self.volume_slider.set_draw_value(False)
+        self.volume_slider.set_can_focus(False)
         self.volume_slider.connect("value-changed", self.on_volume_changed)
         self.volume_box.pack_start(self.volume_slider, False, False, 0)
 
@@ -154,6 +186,41 @@ class WeatherWidget(Gtk.Window):
 
         # Initialize labels for radio
         self.update_station_ui()
+            
+        # --- SMART HOME CONTROL PANEL ---
+        self.smarthome_dashboard = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
+        self.smarthome_dashboard.set_name("dashboard-container")
+        self.smarthome_dashboard.set_margin_bottom(20)
+        self.center_box.pack_start(self.smarthome_dashboard, False, False, 0)
+        
+        smarthome_vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=15)
+        smarthome_vbox.set_halign(Gtk.Align.CENTER)
+        self.smarthome_dashboard.pack_start(smarthome_vbox, True, True, 0)
+        
+        sh_title = Gtk.Label()
+        sh_title.set_markup("<span size='16000' weight='bold' color='white'>🏠 Smart Home</span>")
+        smarthome_vbox.pack_start(sh_title, False, False, 0)
+        
+        self.sh_controls = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
+        self.sh_controls.set_halign(Gtk.Align.CENTER)
+        smarthome_vbox.pack_start(self.sh_controls, False, False, 0)
+        
+        # Buttons
+        self.btn_lights = Gtk.Button(label="💡 Living Room")
+        self.btn_ac = Gtk.Button(label="❄️ AC Power")
+        self.btn_lock = Gtk.Button(label="🔒 Front Door")
+        self.btn_plug = Gtk.Button(label="🔌 Smart Plug (Light)")
+        
+        self.btn_lights.connect("clicked", self.on_sh_toggle, "lights")
+        self.btn_ac.connect("clicked", self.on_sh_toggle, "ac")
+        self.btn_lock.connect("clicked", self.on_sh_toggle, "lock")
+        self.btn_plug.connect("clicked", self.on_sh_toggle, "plug")
+        
+        for btn in [self.btn_lights, self.btn_ac, self.btn_lock, self.btn_plug]:
+            btn.get_style_context().add_class("sh-btn")
+            btn.set_can_focus(False)
+            btn.set_size_request(260, -1)
+            self.sh_controls.pack_start(btn, False, False, 0)
             
         # CSS Styling
         css = b"""
@@ -200,12 +267,23 @@ class WeatherWidget(Gtk.Window):
             border-radius: 8px;
         }
         
+        #bins-container {
+            margin-top: 15px;
+        }
+        
         /* Radio Styles */
         #radio-container {
             background-color: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
             padding: 15px;
             margin-top: 10px;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+        #radio-container.radio-focused {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(100, 150, 255, 0.8);
+            box-shadow: 0 0 15px rgba(100, 150, 255, 0.3);
         }
         .radio-btn {
             background-color: rgba(255, 255, 255, 0.1);
@@ -218,6 +296,29 @@ class WeatherWidget(Gtk.Window):
         .radio-btn:hover {
             background-color: rgba(255, 255, 255, 0.25);
         }
+        
+        /* Smart Home Styles */
+        .sh-btn {
+            background-image: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        .sh-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .sh-btn-active {
+            background-image: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #1e1e2e;
+            border: 1px solid white;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.5);
+        }
         """
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(css)
@@ -229,9 +330,47 @@ class WeatherWidget(Gtk.Window):
         self.update_time()
         GLib.timeout_add_seconds(1, self.update_time)
         
+        self.update_bins()
+        GLib.timeout_add_seconds(60, self.update_bins)
+        
         # Fetch weather in background
         self.fetch_weather_thread()
         GLib.timeout_add_seconds(1800, self.fetch_weather_thread)
+
+    def on_window_clicked(self, widget, event):
+        self.set_focus(None)
+        return False
+
+    def on_radio_clicked(self, widget, event):
+        widget.grab_focus()
+        context = self.radio_box.get_style_context()
+        context.add_class("radio-focused")
+        return True
+
+    def on_radio_focus_out(self, widget, event):
+        context = self.radio_box.get_style_context()
+        context.remove_class("radio-focused")
+        return False
+
+    def on_radio_key_press(self, widget, event):
+        if not widget.has_focus():
+            return False
+        keyval = event.keyval
+        if keyval == Gdk.KEY_space:
+            self.on_radio_play_toggle(None)
+            return True
+        elif keyval in (Gdk.KEY_Return, Gdk.KEY_KP_Enter):
+            self.on_radio_next(None)
+            return True
+        elif keyval == Gdk.KEY_Left:
+            val = self.volume_slider.get_value()
+            self.volume_slider.set_value(max(0, val - 5))
+            return True
+        elif keyval == Gdk.KEY_Right:
+            val = self.volume_slider.get_value()
+            self.volume_slider.set_value(min(100, val + 5))
+            return True
+        return False
 
     def update_station_ui(self):
         station = self.stations[self.current_station_idx]
@@ -306,6 +445,50 @@ class WeatherWidget(Gtk.Window):
         self.date_label.set_markup(f"<span size='20000' weight='300' color='#dddddd'>{date_str}</span>")
         self.calendar.select_month(now.month - 1, now.year)
         self.calendar.select_day(now.day)
+        return True
+
+    def update_bins(self):
+        from datetime import datetime, timedelta
+        now = datetime.now()
+        weekday = now.weekday()
+        hour = now.hour
+        
+        # Calculate days until the relevant Tuesday
+        if weekday <= 1: # Mon, Tue
+            days_to_tuesday = 1 - weekday
+        else: # Wed, Thu, Fri, Sat, Sun
+            days_to_tuesday = 7 - (weekday - 1)
+            
+        target_tuesday = now + timedelta(days=days_to_tuesday)
+        
+        # Fixed starting epoch: July 14, 2026 was a Yellow week
+        epoch = datetime(2026, 7, 14).date()
+        target_date = target_tuesday.date()
+        
+        weeks_since_epoch = (target_date - epoch).days // 7
+        is_yellow = (weeks_since_epoch % 2 == 0)
+        bin_colors = "🔴 Red &amp; 🟡 Yellow" if is_yellow else "🔴 Red &amp; 🟢 Green"
+        
+        state = "idle"
+        # Start reminding on Sunday evening (after 4 PM) and all of Monday
+        if (weekday == 6 and hour >= 16) or (weekday == 0):
+            state = "out"
+        elif weekday == 1: # Tuesday
+            state = "in"
+            
+        if state == "out":
+            self.bins_title.set_markup("<span size='12000' color='#ffbbaa'>🗑️ Bin Night!</span>\n<span size='14000' weight='bold' color='white'>Take the bins out.</span>")
+            self.bins_status.set_markup(f"<span size='12000' color='#cccccc'>Place your {bin_colors}\nbins on the curb.</span>")
+            self.bins_box.show_all()
+        elif state == "in":
+            self.bins_title.set_markup("<span size='12000' color='#aaffaa'>🗑️ Reminder:</span>\n<span size='14000' weight='bold' color='white'>Bring the bins back in!</span>")
+            self.bins_status.set_markup(f"<span size='12000' color='#cccccc'>{bin_colors} bins.</span>")
+            self.bins_box.show_all()
+        else:
+            self.bins_title.set_markup("<span size='12000' color='#aaaaaa'>Upcoming Collection</span>")
+            self.bins_status.set_markup(f"<span size='11000' color='#888888'>{bin_colors}\nbins on Tuesday</span>")
+            self.bins_box.show_all()
+            
         return True
 
     def fetch_weather_thread(self):
@@ -404,6 +587,31 @@ class WeatherWidget(Gtk.Window):
         if len(self.weather_labels) > 0:
             self.weather_labels[0].set_markup(f"<span color='red'>Weather Error: Unable to fetch data</span>")
         return False
+
+    def on_sh_toggle(self, widget, device_id):
+        context = widget.get_style_context()
+        if context.has_class("sh-btn-active"):
+            context.remove_class("sh-btn-active")
+            if device_id == "lock":
+                widget.set_label("🔒 Front Door")
+            elif device_id == "lights":
+                widget.set_label("💡 Living Room")
+            elif device_id == "ac":
+                widget.set_label("❄️ AC Power")
+            elif device_id == "plug":
+                widget.set_label("🔌 Smart Plug (Light)")
+                subprocess.run(["/home/zfil/Lenovo_Smarthome_Hub/control_plug.sh", "off"])
+        else:
+            context.add_class("sh-btn-active")
+            if device_id == "lock":
+                widget.set_label("🔓 Front Door (UNLOCKED)")
+            elif device_id == "lights":
+                widget.set_label("💡 Living Room (ON)")
+            elif device_id == "ac":
+                widget.set_label("❄️ AC (ON)")
+            elif device_id == "plug":
+                widget.set_label("🔌 Smart Plug (Light) (ON)")
+                subprocess.run(["/home/zfil/Lenovo_Smarthome_Hub/control_plug.sh", "on"])
 
 win = WeatherWidget()
 win.connect("destroy", Gtk.main_quit)

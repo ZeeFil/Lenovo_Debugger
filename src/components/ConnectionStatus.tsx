@@ -22,7 +22,7 @@ export const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ isConnected,
             {isConnected ? 'Cloud Relay Connected' : 'Disconnected'}
           </span>
           <span className="text-[10px] text-neutral-400">
-            {isConnected ? 'Syncing active' : 'Run agent.py on tablet'}
+            {isConnected ? 'Syncing active' : 'Run tablet_agent.py on tablet'}
           </span>
         </div>
       </div>

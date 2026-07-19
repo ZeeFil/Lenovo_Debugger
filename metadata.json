@@ -1,5 +1,5 @@
 {
-  "name": "Lenovo Duet 2 Debugger",
+  "name": "Lenovo Smarthome Hub",
   "description": "A web-based remote terminal and AI diagnostic tool for postmarketOS using WebUSB/Web Serial.",
   "requestFramePermissions": [
     "serial",
