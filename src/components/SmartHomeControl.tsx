@@ -224,15 +224,15 @@ export const SmartHomeControl: React.FC = () => {
     if (isCameraActive) {
       setIsCameraActive(false);
       try {
-        await executeCloudCommand("killall mjpg_streamer");
+        await executeCloudCommand("pkill -f mjpeg_screen_server.py");
       } catch (e) {
         console.error("Failed to stop stream", e);
       }
     } else {
       setIsCameraActive(true);
       try {
-        // -b starts it in background, so the command completes quickly
-        await executeCloudCommand("mjpg_streamer -b -i 'input_uvc.so -d /dev/video0 -r 640x480 -f 15' -o 'output_http.so -p 8080 -w /usr/share/mjpg-streamer/www'", 3000);
+        // Run the python script in background using nohup or just background
+        await executeCloudCommand("nohup python3 mjpeg_screen_server.py > /dev/null 2>&1 &", 3000);
       } catch (e) {
         console.error("Error starting stream", e);
       }
